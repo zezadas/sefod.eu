@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>index on Zezadas Blog</title>
-    <link>https://sefod.eu/tags/index/</link>
+    <link>https://www.sefod.eu/tags/index/</link>
     <description>Recent content in index on Zezadas Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-	<atom:link href="https://sefod.eu/tags/index/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.sefod.eu/tags/index/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Posts</title>
-      <link>https://sefod.eu/posts/</link>
+      <link>https://www.sefod.eu/posts/</link>
       <pubDate>Fri, 14 Aug 2020 16:31:39 +0200</pubDate>
       
-      <guid>https://sefod.eu/posts/</guid>
+      <guid>https://www.sefod.eu/posts/</guid>
       <description></description>
     </item>
     

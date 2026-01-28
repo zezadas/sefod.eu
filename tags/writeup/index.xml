@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Writeup on Zezadas Blog</title>
-    <link>https://sefod.eu/tags/writeup/</link>
+    <link>https://www.sefod.eu/tags/writeup/</link>
     <description>Recent content in Writeup on Zezadas Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sat, 22 Sep 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://sefod.eu/tags/writeup/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.sefod.eu/tags/writeup/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>0xOPOSEC summer challenge</title>
-      <link>https://sefod.eu/posts/0xoposec_summer_challenge/</link>
+      <link>https://www.sefod.eu/posts/0xoposec_summer_challenge/</link>
       <pubDate>Sat, 22 Sep 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://sefod.eu/posts/0xoposec_summer_challenge/</guid>
+      <guid>https://www.sefod.eu/posts/0xoposec_summer_challenge/</guid>
       <description>Summertime is not the same without 0xOPOSEC meetup. This write-up summarizes the solving of 0xOPOSEC summer CTF.</description>
     </item>
     
