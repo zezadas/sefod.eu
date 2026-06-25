@@ -1,1 +1,3 @@
 User-agent: *
+Allow: /
+Sitemap: https://www.sefod.eu/sitemap.xml
