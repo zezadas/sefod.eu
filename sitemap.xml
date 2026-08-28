@@ -1,1 +1,35 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"><url><loc>https://www.sefod.eu/posts/from_black_box_to_uid_0/</loc><lastmod>2026-06-20T00:00:00+00:00</lastmod><changefreq>daily</changefreq><priority>0.5</priority></url><url><loc>https://www.sefod.eu/</loc><lastmod>2026-06-20T00:00:00+00:00</lastmod><changefreq>daily</changefreq><priority>0.5</priority></url><url><loc>https://www.sefod.eu/posts/</loc><lastmod>2026-06-20T00:00:00+00:00</lastmod><changefreq>daily</changefreq><priority>0.5</priority></url><url><loc>https://www.sefod.eu/posts/raspberry_bluetooth_audio_routing/</loc><lastmod>2026-04-10T00:00:00+00:00</lastmod><changefreq>daily</changefreq><priority>0.5</priority></url><url><loc>https://www.sefod.eu/posts/web_proxies/</loc><lastmod>2020-08-14T16:31:39+02:00</lastmod><changefreq>daily</changefreq><priority>0.5</priority></url></urlset>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>http://192.168.2.206:1313/posts/from_black_box_to_uid_0/</loc>
+    <lastmod>2026-06-20T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://192.168.2.206:1313/</loc>
+    <lastmod>2026-06-20T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://192.168.2.206:1313/posts/</loc>
+    <lastmod>2026-06-20T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://192.168.2.206:1313/posts/raspberry_bluetooth_audio_routing/</loc>
+    <lastmod>2026-04-10T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://192.168.2.206:1313/posts/web_proxies/</loc>
+    <lastmod>2020-08-14T16:31:39+02:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>
